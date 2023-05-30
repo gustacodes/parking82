@@ -19,7 +19,7 @@ import com.projeto.parking82.services.ServicesVagas;
 
 @RestController
 public class Parking82Controller {
-    
+
     @Autowired
     private ClienteRepository clienteRepository;
 
@@ -30,7 +30,7 @@ public class Parking82Controller {
     private VagasRepository vagasRepository;
 
     @Autowired
-    private ServicesCliente servicesCliente;    
+    private ServicesCliente servicesCliente;
 
     @Autowired
     private ServicesVagas servicesVagas;
@@ -39,7 +39,7 @@ public class Parking82Controller {
     @PostMapping("/vagas")
     public ResponseEntity<String> saveVagas() {
 
-        for(int i = 1; i <= 30; i++) {    
+        for(int i = 1; i <= 30; i++) {
             servicesVagas.listaVagas(i);
         }
         return ResponseEntity.status(HttpStatus.CREATED).body("Vagas criadas");
@@ -62,17 +62,17 @@ public class Parking82Controller {
     //MÉTODO PARA CADASTRAR CLIENTE
     @PostMapping("/cadastro")
     public ResponseEntity<Object> cadastroCliente(@RequestBody Cliente cliente) {
-        
+
         if(servicesCliente.existsByVaga(cliente.getVaga())) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Vaga já cadastrada");
 
         } else if(servicesCliente.existsByPlaca(cliente.getPlaca())) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Placa já cadastrada");
 
-        } else {            
+        } else {
 
             Iterable<Vagas> lista = vagasRepository.findAll();
-            
+
             for(Vagas va : lista) {
                 if(va.getVagas().toString().equals(cliente.getVaga()) && !servicesCliente.existsByVaga(cliente.getVaga())) {
 
@@ -88,27 +88,27 @@ public class Parking82Controller {
 
             return ResponseEntity.status(HttpStatus.CREATED).body("Cliente cadastrado");
         }
-        
+
     }
 
     //MÉTODO PARA FECHAR, EXCLUINDO O CLIENTE E DEIXANDO A VAGA LIVRE (TRUE)
     @DeleteMapping("/fechar/{id}")
     public ResponseEntity<Object> excluirCliente(@PathVariable Long id) {
-        
+
         Optional<Cliente> cliente = clienteRepository.findById(id);
         Optional<Vagas> vagas = vagasRepository.findById(id);
 
-            if(!cliente.isPresent()) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Cliente não encontrado");
+        if(!cliente.isPresent()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Cliente não encontrado");
 
-            } else {
+        } else {
 
-                clienteRepository.deleteById(id);
-                vagas.get().setStatus(false);
-                vagasRepository.save(vagas.get());
+            clienteRepository.deleteById(id);
+            vagas.get().setStatus(false);
+            vagasRepository.save(vagas.get());
 
-                return ResponseEntity.status(HttpStatus.OK).body("Fechamento concluído");
-            }
+            return ResponseEntity.status(HttpStatus.OK).body("Fechamento concluído");
+        }
 
     }
 
