@@ -3,12 +3,12 @@ package com.projeto.parking82.controller;
 import java.util.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-
 import com.projeto.parking82.model.Cliente;
 import com.projeto.parking82.model.Vagas;
 import com.projeto.parking82.repository.ClienteRepository;
@@ -17,7 +17,7 @@ import com.projeto.parking82.repository.VagasRepository;
 import com.projeto.parking82.services.ServicesCliente;
 import com.projeto.parking82.services.ServicesVagas;
 
-@Controller
+@RestController
 public class Parking82Controller {
     
     @Autowired
@@ -35,42 +35,39 @@ public class Parking82Controller {
     @Autowired
     private ServicesVagas servicesVagas;
 
-    @RequestMapping("/vagas")
-    public String saveVagas() {
+    //MÉTODO PARA GERAR A QUANTIDADE DE VAGAS
+    @PostMapping("/vagas")
+    public ResponseEntity<String> saveVagas() {
 
         for(int i = 1; i <= 30; i++) {    
-              servicesVagas.listaVagas(i);
-        }            
-
-        return "redirect:/lista-vagas";
+            servicesVagas.listaVagas(i);
+        }
+        return ResponseEntity.status(HttpStatus.CREATED).body("Vagas criadas");
     }
 
-    @RequestMapping("/clientes")
-    public ModelAndView clientes() {
-
-        ModelAndView mv = new ModelAndView("clientes");
+    //MÉTODO PARA LISTAR TODOS OS CLIENTES
+    @GetMapping("/clientes")
+    public ResponseEntity<List<Cliente>> clientes() {
         List<Cliente> clientes = clienteRepository.findAll();
-        
-        mv.addObject("cliente", clientes);        
-
-        return mv;
+        return ResponseEntity.status(HttpStatus.OK).body(clientes);
     }
 
-    @GetMapping("/cadastro")
-    public String cadastro() { 
-        return "cadastro";
+    //MÉTODO PARA LISTAR TODAS AS VAGAS DO ESTACIONAMENTO
+    @GetMapping("/lista-vagas")
+    public ResponseEntity<List<Vagas>> todasVagas() {
+        List<Vagas> vaga = vagasRepository.findAll();
+        return ResponseEntity.status(HttpStatus.OK).body(vaga);
     }
 
-    @RequestMapping("/cadastro")
-    public String cadastroCliente(Cliente cliente, Model model) {
+    //MÉTODO PARA CADASTRAR CLIENTE
+    @PostMapping("/cadastro")
+    public ResponseEntity<Object> cadastroCliente(@RequestBody Cliente cliente) {
         
         if(servicesCliente.existsByVaga(cliente.getVaga())) {
-            model.addAttribute("vagaExiste", "Esta vaga já está em uso");
-            return "cadastro";
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Vaga já cadastrada");
 
         } else if(servicesCliente.existsByPlaca(cliente.getPlaca())) {
-            model.addAttribute("placaExiste", "Esta placa já está cadastrada");
-            return "cadastro";      
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Placa já cadastrada");
 
         } else {            
 
@@ -89,58 +86,30 @@ public class Parking82Controller {
                 }
             }
 
-            return "redirect:/clientes";
+            return ResponseEntity.status(HttpStatus.CREATED).body("Cliente cadastrado");
         }
         
     }
 
-    @GetMapping("/lista-vagas")
-    public ModelAndView getNumeros() {
+    //MÉTODO PARA FECHAR, EXCLUINDO O CLIENTE E DEIXANDO A VAGA LIVRE (TRUE)
+    @DeleteMapping("/fechar/{id}")
+    public ResponseEntity<Object> excluirCliente(@PathVariable Long id) {
         
-        Iterable<Vagas> vaga = vagasRepository.findAll();
-        ModelAndView mv = new ModelAndView("vagas");
-                
-        mv.addObject("vaga", vaga);
+        Optional<Cliente> cliente = clienteRepository.findById(id);
+        Optional<Vagas> vagas = vagasRepository.findById(id);
 
-        return mv;
+            if(!cliente.isPresent()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Cliente não encontrado");
 
-    }
+            } else {
 
-    @RequestMapping("/deletar")
-    public String excluirCliente(long id) {
-        
-        if(id > 0) {         
+                clienteRepository.deleteById(id);
+                vagas.get().setStatus(false);
+                vagasRepository.save(vagas.get());
 
-            Iterable<Vagas> deleteVagas =  vagasRepository.findAll();
-            Iterable<Cliente> deleteCliente =  clienteRepository.findAll();
-
-            for(Cliente c : deleteCliente) {
-
-                for(Vagas vaga : deleteVagas) {
-
-                    if(vaga.getVagas().toString().equals(c.getVaga())) {
-
-                        if(id == c.getId()) {
-                            vaga.setStatus(false);
-                            vagasRepository.save(vaga);
-                        }
-                        
-                        clienteRepository.deleteById(id);
-                    }
-
-                }
-
+                return ResponseEntity.status(HttpStatus.OK).body("Fechamento concluído");
             }
-            
-        }
 
-        return "redirect:/clientes";
-    }    
-
-    @RequestMapping("/password")
-    public String password() {
-        return "password";
     }
-
 
 }
