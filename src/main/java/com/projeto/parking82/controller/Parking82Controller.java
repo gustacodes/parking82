@@ -56,20 +56,20 @@ public class Parking82Controller {
     public ResponseEntity<Object> cadastroCliente(@RequestBody Cliente cliente) {
 
         if(servicesCliente.existsByVaga(cliente.getVaga())) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("Vaga já cadastrada");
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Vaga " + cliente.getVaga() + " já está em uso.");
 
         } else if(servicesCliente.existsByPlaca(cliente.getPlaca())) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("Placa já cadastrada");
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Placa " + cliente.getPlaca() + " já cadastrada;");
 
         } else {
 
-            Vagas vagas = servicesVagas.findById(cliente.getVaga());
+            var vagas = servicesVagas.findById(cliente.getVaga());
             vagas.setVagas(cliente.getVaga());
             vagas.setStatus(true);
             servicesVagas.save(vagas);
             servicesCliente.save(cliente);
 
-            return ResponseEntity.status(HttpStatus.CREATED).body("Cliente cadastrado.");
+            return ResponseEntity.status(HttpStatus.CREATED).body("Cliente " + cliente.getNome() + " registrado na vaga " + vagas.getVagas());
         }
     }
 
