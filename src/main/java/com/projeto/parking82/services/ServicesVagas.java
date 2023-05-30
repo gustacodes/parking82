@@ -39,5 +39,4 @@ public class ServicesVagas {
         return vagasRepository.save(v);
     }
 
-
 }

@@ -21,12 +21,12 @@ public class Parking82Controller {
     private ServicesVagas servicesVagas;
 
     //MÉTODO PARA GERAR A QUANTIDADE DE VAGAS
-    @PostMapping("/vagas")
-    public ResponseEntity<String> saveVagas() {
+    @PostMapping("/vagas/{vagas}")
+    public ResponseEntity<String> saveVagas(@PathVariable Long vagas) {
 
         int count = 0;
 
-        for(long i = 1; i <= 30; i++) {
+        for(long i = 1; i <= vagas; i++) {
             servicesVagas.listaVagas(i);
             count++;
         }
