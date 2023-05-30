@@ -2,6 +2,7 @@ package com.projeto.parking82.services;
 
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,6 +15,23 @@ public class ServicesVagas {
     
     @Autowired
     VagasRepository vagasRepository;
+
+    public Vagas save(Vagas vaga) {
+        return vagasRepository.save(vaga);
+    }
+
+    public List<Vagas> findAll() {
+        return vagasRepository.findAll();
+    }
+
+    public Vagas findById(Long id) {
+        Optional<Vagas> vagas = vagasRepository.findById(id);
+        return vagas.get();
+    }
+
+    public void deleteById(Long id) {
+        vagasRepository.deleteById(id);
+    }
 
     public Vagas listaVagas(Integer vagas) {
         Vagas v = new Vagas();

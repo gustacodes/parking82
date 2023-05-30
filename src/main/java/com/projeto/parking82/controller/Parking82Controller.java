@@ -21,15 +21,6 @@ import com.projeto.parking82.services.ServicesVagas;
 public class Parking82Controller {
 
     @Autowired
-    private ClienteRepository clienteRepository;
-
-    @Autowired
-    UsuarioRespository usuarioRespository;
-
-    @Autowired
-    private VagasRepository vagasRepository;
-
-    @Autowired
     private ServicesCliente servicesCliente;
 
     @Autowired
@@ -39,24 +30,25 @@ public class Parking82Controller {
     @PostMapping("/vagas")
     public ResponseEntity<String> saveVagas() {
 
+        int count = 0;
+
         for(int i = 1; i <= 30; i++) {
             servicesVagas.listaVagas(i);
+            count++;
         }
-        return ResponseEntity.status(HttpStatus.CREATED).body("Vagas criadas");
+        return ResponseEntity.status(HttpStatus.CREATED).body(count + " vagas criadas.");
     }
 
     //MÉTODO PARA LISTAR TODOS OS CLIENTES
     @GetMapping("/clientes")
     public ResponseEntity<List<Cliente>> clientes() {
-        List<Cliente> clientes = clienteRepository.findAll();
-        return ResponseEntity.status(HttpStatus.OK).body(clientes);
+        return ResponseEntity.status(HttpStatus.OK).body(servicesCliente.findAll());
     }
 
     //MÉTODO PARA LISTAR TODAS AS VAGAS DO ESTACIONAMENTO
     @GetMapping("/lista-vagas")
     public ResponseEntity<List<Vagas>> todasVagas() {
-        List<Vagas> vaga = vagasRepository.findAll();
-        return ResponseEntity.status(HttpStatus.OK).body(vaga);
+        return ResponseEntity.status(HttpStatus.OK).body(servicesVagas.findAll());
     }
 
     //MÉTODO PARA CADASTRAR CLIENTE
@@ -71,7 +63,7 @@ public class Parking82Controller {
 
         } else {
 
-            Iterable<Vagas> lista = vagasRepository.findAll();
+            Iterable<Vagas> lista = servicesVagas.findAll();
 
             for(Vagas va : lista) {
                 if(va.getVagas().toString().equals(cliente.getVaga()) && !servicesCliente.existsByVaga(cliente.getVaga())) {
@@ -79,9 +71,9 @@ public class Parking82Controller {
                     va.setVagas(Integer.parseInt(cliente.getVaga()));
                     va.setStatus(true);
 
-                    vagasRepository.deleteById(cliente.getId());
-                    vagasRepository.save(va);
-                    clienteRepository.save(cliente);
+                    servicesVagas.deleteById(cliente.getId());
+                    servicesVagas.save(va);
+                    servicesCliente.save(cliente);
 
                 }
             }
@@ -95,17 +87,17 @@ public class Parking82Controller {
     @DeleteMapping("/fechar/{id}")
     public ResponseEntity<Object> excluirCliente(@PathVariable Long id) {
 
-        Optional<Cliente> cliente = clienteRepository.findById(id);
-        Optional<Vagas> vagas = vagasRepository.findById(id);
+        Cliente cliente = servicesCliente.findById(id);
+        Vagas vagas = servicesVagas.findById(id);
 
-        if(!cliente.isPresent()) {
+        if(cliente.equals(null)) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Cliente não encontrado");
 
         } else {
 
-            clienteRepository.deleteById(id);
-            vagas.get().setStatus(false);
-            vagasRepository.save(vagas.get());
+            servicesCliente.deleteById(id);
+            vagas.setStatus(false);
+            servicesVagas.save(vagas);
 
             return ResponseEntity.status(HttpStatus.OK).body("Fechamento concluído");
         }
