@@ -6,7 +6,7 @@ import com.projeto.parking82.model.Cliente;
 
 public interface ClienteRepository extends JpaRepository<Cliente, Long> {
     
-   boolean existsByVaga(String vaga);
+   boolean existsByVaga(Long vaga);
    boolean existsByPlaca(String placa);
    
 }

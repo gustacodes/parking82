@@ -32,7 +32,7 @@ public class ServicesCliente {
         clienteRepository.deleteById(id);
     }
 
-    public boolean existsByVaga(String vaga) {
+    public boolean existsByVaga(Long vaga) {
         return clienteRepository.existsByVaga(vaga);
     }
 

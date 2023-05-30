@@ -33,7 +33,7 @@ public class ServicesVagas {
         vagasRepository.deleteById(id);
     }
 
-    public Vagas listaVagas(Integer vagas) {
+    public Vagas listaVagas(Long vagas) {
         Vagas v = new Vagas();
         v.setVagas(vagas);
         return vagasRepository.save(v);

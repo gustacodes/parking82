@@ -32,7 +32,7 @@ public class Parking82Controller {
 
         int count = 0;
 
-        for(int i = 1; i <= 30; i++) {
+        for(long i = 1; i <= 30; i++) {
             servicesVagas.listaVagas(i);
             count++;
         }
@@ -63,24 +63,14 @@ public class Parking82Controller {
 
         } else {
 
-            Iterable<Vagas> lista = servicesVagas.findAll();
+            Vagas vagas = servicesVagas.findById(cliente.getVaga());
+            vagas.setVagas(cliente.getVaga());
+            vagas.setStatus(true);
+            servicesVagas.save(vagas);
+            servicesCliente.save(cliente);
 
-            for(Vagas va : lista) {
-                if(va.getVagas().toString().equals(cliente.getVaga()) && !servicesCliente.existsByVaga(cliente.getVaga())) {
-
-                    va.setVagas(Integer.parseInt(cliente.getVaga()));
-                    va.setStatus(true);
-
-                    servicesVagas.deleteById(cliente.getId());
-                    servicesVagas.save(va);
-                    servicesCliente.save(cliente);
-
-                }
-            }
-
-            return ResponseEntity.status(HttpStatus.CREATED).body("Cliente cadastrado");
+            return ResponseEntity.status(HttpStatus.CREATED).body("Cliente cadastrado.");
         }
-
     }
 
     //MÉTODO PARA FECHAR, EXCLUINDO O CLIENTE E DEIXANDO A VAGA LIVRE (TRUE)
@@ -88,7 +78,7 @@ public class Parking82Controller {
     public ResponseEntity<Object> excluirCliente(@PathVariable Long id) {
 
         Cliente cliente = servicesCliente.findById(id);
-        Vagas vagas = servicesVagas.findById(id);
+        Vagas vagas = servicesVagas.findById(cliente.getVaga());
 
         if(cliente.equals(null)) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Cliente não encontrado");
