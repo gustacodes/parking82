@@ -5,15 +5,9 @@ import java.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
-import com.projeto.parking82.model.Cliente;
-import com.projeto.parking82.model.Vagas;
-import com.projeto.parking82.repository.ClienteRepository;
-import com.projeto.parking82.repository.UsuarioRespository;
-import com.projeto.parking82.repository.VagasRepository;
+import com.projeto.parking82.entities.Cliente;
+import com.projeto.parking82.entities.Vagas;
 import com.projeto.parking82.services.ServicesCliente;
 import com.projeto.parking82.services.ServicesVagas;
 

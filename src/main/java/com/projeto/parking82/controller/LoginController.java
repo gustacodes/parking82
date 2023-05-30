@@ -6,7 +6,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
-import com.projeto.parking82.model.Usuario;
+import com.projeto.parking82.entities.Usuario;
 import com.projeto.parking82.repository.UsuarioRespository;
 
 @Controller

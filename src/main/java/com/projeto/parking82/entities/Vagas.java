@@ -1,11 +1,9 @@
-package com.projeto.parking82.model;
+package com.projeto.parking82.entities;
 
-import java.io.Serializable;
 import jakarta.persistence.Id;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

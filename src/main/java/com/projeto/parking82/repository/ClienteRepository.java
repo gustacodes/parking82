@@ -2,8 +2,10 @@ package com.projeto.parking82.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.projeto.parking82.model.Cliente;
+import com.projeto.parking82.entities.Cliente;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface ClienteRepository extends JpaRepository<Cliente, Long> {
     
    boolean existsByVaga(Long vaga);

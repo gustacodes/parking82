@@ -1,6 +1,4 @@
-package com.projeto.parking82.model;
-
-import java.io.Serializable;
+package com.projeto.parking82.entities;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

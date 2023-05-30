@@ -1,4 +1,4 @@
-package com.projeto.parking82.dao;
+package com.projeto.parking82.config;
 
 import javax.sql.DataSource;
 

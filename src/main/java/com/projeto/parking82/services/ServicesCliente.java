@@ -1,6 +1,6 @@
 package com.projeto.parking82.services;
 
-import com.projeto.parking82.model.Cliente;
+import com.projeto.parking82.entities.Cliente;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

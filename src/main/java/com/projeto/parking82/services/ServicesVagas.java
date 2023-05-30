@@ -7,7 +7,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.projeto.parking82.model.Vagas;
+import com.projeto.parking82.entities.Vagas;
 import com.projeto.parking82.repository.VagasRepository;
 
 @Service
