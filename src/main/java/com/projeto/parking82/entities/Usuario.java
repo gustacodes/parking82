@@ -24,12 +24,25 @@ public class Usuario {
     private long id;
 
     @NotEmpty(message = "Campo obrigatório")
-    private String nick;
-    
+    private Long idUsuario;
+
+    @NotEmpty(message = "Campo obrigatório")
+    private String email;
+
     @NotEmpty(message = "Campo obrigatório")
     private String senha;
 
     @NotEmpty(message = "Campo obrigatório")
-    private String email;
+    private String ConfirmedPassword;
+
+    @NotEmpty(message = "Campo obrigatório")
+    private String name;
+
+    @NotEmpty(message = "Campo obrigatório")
+    private String lastName;
+
+    @NotEmpty(message = "Campo obrigatório")
+    private Boolean checkBox;
+
 
 }
