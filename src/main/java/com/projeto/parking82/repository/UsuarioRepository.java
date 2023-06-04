@@ -1,12 +1,10 @@
 package com.projeto.parking82.repository;
 
-
 import org.springframework.data.jpa.repository.JpaRepository;
-
-import com.projeto.parking82.entities.Vagas;
 import org.springframework.stereotype.Repository;
 
+import com.projeto.parking82.entities.Usuario;
+
 @Repository
-public interface VagasRepository extends JpaRepository<Vagas, Long> {
-    
+public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
 }
