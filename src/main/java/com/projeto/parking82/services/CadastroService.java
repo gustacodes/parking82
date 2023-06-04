@@ -1,23 +1,22 @@
 package com.projeto.parking82.services;
 
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.projeto.parking82.entities.Cadastro;
 
 import com.projeto.parking82.repository.CadastroRepository;
 
-import io.micrometer.common.util.StringUtils;
 
 import java.util.List;
-import java.util.Objects;
 
-import org.springframework.beans.factory.annotation.Autowired;
 
 @Service
 public class CadastroService {
 
+    @Autowired
     private final CadastroRepository cadastroRepository;
+
 
     public CadastroService(CadastroRepository cadastroRepository) {
         this.cadastroRepository = cadastroRepository;
@@ -29,5 +28,13 @@ public class CadastroService {
 
     public void criarCadastro(Cadastro cadastro) {
         cadastroRepository.save(cadastro);
+    }
+
+    public boolean verificarLogin(String email, String password) {
+        Cadastro cadastro = cadastroRepository.findByEmail(email);
+        if (cadastro != null && cadastro.getPassword().equals(password)) {
+            return true; // Login válido
+        }
+        return false; // Login inválido
     }
 }

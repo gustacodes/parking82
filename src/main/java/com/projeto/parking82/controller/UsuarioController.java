@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.projeto.parking82.entities.Usuario;
-import com.projeto.parking82.repository.UsuarioRepository;
+// import com.projeto.parking82.repository.UsuarioRepository;
 import com.projeto.parking82.services.UsuarioService;
 
 @RestController

@@ -16,19 +16,19 @@ public class Cadastro {
   private Long id;
   
   @Column(nullable = false)
-  private String nome;
+  private String name;
   
   @Column(nullable = false)
   private String email;
   
   @Column(nullable = false)
-  private String senha;
+  private String password;
   
   @Column(nullable = false)
-  private String confirmacaoSenha;
+  private String confirmPassword;
   
   @Column(nullable = false)
-  private boolean termosAceitos;
+  private boolean acceptTerms;
   
   // Construtores, getters e setters...
   
@@ -36,12 +36,12 @@ public class Cadastro {
     // Construtor vazio necessário para o Hibernate
   }
   
-  public Cadastro(String nome, String email, String senha, String confirmacaoSenha, boolean termosAceitos) {
-    this.nome = nome;
+  public Cadastro(String name, String email, String password, String confirmPassword, boolean acceptTerms) {
+    this.name = name;
     this.email = email;
-    this.senha = senha;
-    this.confirmacaoSenha = confirmacaoSenha;
-    this.termosAceitos = termosAceitos;
+    this.password = password;
+    this.confirmPassword = confirmPassword;
+    this.acceptTerms = acceptTerms;
   }
   
   // Getters e setters dos atributos...
@@ -54,12 +54,12 @@ public class Cadastro {
     this.id = id;
   }
 
-  public String getNome() {
-    return nome;
+  public String getName() {
+    return name;
   }
 
-  public void setNome(String nome) {
-    this.nome = nome;
+  public void setName(String name) {
+    this.name = name;
   }
 
   public String getEmail() {
@@ -70,27 +70,27 @@ public class Cadastro {
     this.email = email;
   }
 
-  public String getSenha() {
-    return senha;
+  public String getPassword() {
+    return password;
   }
 
-  public void setSenha(String senha) {
-    this.senha = senha;
+  public void setPassword(String password) {
+    this.password = password;
   }
 
-  public String getConfirmacaoSenha() {
-    return confirmacaoSenha;
+  public String getconfirmPassword() {
+    return confirmPassword;
   }
 
-  public void setConfirmacaoSenha(String confirmacaoSenha) {
-    this.confirmacaoSenha = confirmacaoSenha;
+  public void setconfirmPassword(String confirmPassword) {
+    this.confirmPassword = confirmPassword;
   }
 
-  public boolean isTermosAceitos() {
-    return termosAceitos;
+  public boolean isacceptTerms() {
+    return acceptTerms;
   }
 
-  public void setTermosAceitos(boolean termosAceitos) {
-    this.termosAceitos = termosAceitos;
+  public void setacceptTerms(boolean acceptTerms) {
+    this.acceptTerms = acceptTerms;
   }
 }
