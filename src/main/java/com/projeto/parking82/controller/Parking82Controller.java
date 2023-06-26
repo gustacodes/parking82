@@ -93,7 +93,8 @@ public class Parking82Controller {
                     "\t\t\t\t\t\t\t\t\tVAGA: " + cliente.getVaga() +
                     "\n\t\t\t\t\tENTRADA: " + cliente.getEntrada() +
                     "\t\t\t\t\t\t\t\t\tSAÍDA: " + cliente.getSaida() +
-                    "\n\n\t\t\t\t\t\t\t\t\t\t\t\tTOTAL: R$ "+ cliente.getValor() +
+                    "\n\n\n\n\t\t\t\t\t\t\t\t\t\t\t\t  PERÍODO: " + cliente.getPeriodo() +
+                    "\n\t\t\t\t\t\t\t\t\t\t\t\tÁ PAGAR: R$ "+ cliente.getValor() +
                     "\n\n\t\t\t\tCNPJ: 99.107.370/0001-90 - Contato (82) 98162-1126 - E-mail parking82@contato.com" +
                     "\n\t\t\t\t\t\t\t\tPaking 82 - Soluções em estacionamentos ©");
         }

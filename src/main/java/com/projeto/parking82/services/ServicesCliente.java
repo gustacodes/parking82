@@ -45,13 +45,23 @@ public class ServicesCliente {
     }
 
     public Cliente valorTotal(Cliente cliente) {
+
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
         LocalTime entrada = LocalTime.parse(cliente.getEntrada(), formatter);
         LocalTime saida = LocalTime.parse(cliente.getSaida(), formatter);
 
         Duration duration = Duration.between(entrada, saida);
+        long h = duration.toHours();
+        long m = duration.toMinutes() % 60;
+
+        LocalTime localTime = LocalTime.of((int) h, (int) m);
+        DateTimeFormatter fmt = DateTimeFormatter.ofPattern("HH:mm");
+        String periodo = localTime.format(fmt);
+        cliente.setPeriodo(periodo);
+
         long minutes = duration.toMinutes();
         double total = minutes * 0.0233333333333333;
+
         DecimalFormat decimalFormat = new DecimalFormat("#.00");
         String totalFormatado = decimalFormat.format(total);
 

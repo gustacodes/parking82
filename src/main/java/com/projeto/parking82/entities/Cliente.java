@@ -35,5 +35,6 @@ public class Cliente {
     private String entrada;
     private String saida;
     private String valor = "0.00";
+    private String periodo = "00:00";
 
 }
