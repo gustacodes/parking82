@@ -1,15 +1,19 @@
 package com.projeto.parking82.controller;
 
-import java.util.*;
-
+import com.projeto.parking82.entities.Cliente;
+import com.projeto.parking82.entities.Vagas;
+import com.projeto.parking82.repository.ClienteRepository;
+import com.projeto.parking82.services.ServicesCliente;
+import com.projeto.parking82.services.ServicesVagas;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import com.projeto.parking82.entities.Cliente;
-import com.projeto.parking82.entities.Vagas;
-import com.projeto.parking82.services.ServicesCliente;
-import com.projeto.parking82.services.ServicesVagas;
+
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 @RestController
 public class Parking82Controller {
@@ -20,7 +24,11 @@ public class Parking82Controller {
     @Autowired
     private ServicesVagas servicesVagas;
 
-    //MÉTODO PARA GERAR A QUANTIDADE DE VAGAS
+    @GetMapping("/vagas")
+    public ResponseEntity<List<Vagas>> todasVagas() {
+        return ResponseEntity.status(HttpStatus.OK).body(servicesVagas.todasVagas());
+    }
+
     @PostMapping("/vagas/{vagas}")
     public ResponseEntity<String> saveVagas(@PathVariable Long vagas) {
 
@@ -33,19 +41,11 @@ public class Parking82Controller {
         return ResponseEntity.status(HttpStatus.CREATED).body(count + " vagas criadas.");
     }
 
-    //MÉTODO PARA LISTAR TODOS OS CLIENTES
     @GetMapping("/clientes")
     public ResponseEntity<List<Cliente>> clientes() {
         return ResponseEntity.status(HttpStatus.OK).body(servicesCliente.findAll());
     }
 
-    //MÉTODO PARA LISTAR TODAS AS VAGAS DO ESTACIONAMENTO
-    @GetMapping("/lista-vagas")
-    public ResponseEntity<List<Vagas>> todasVagas() {
-        return ResponseEntity.status(HttpStatus.OK).body(servicesVagas.findAll());
-    }
-
-    //MÉTODO PARA CADASTRAR CLIENTE
     @PostMapping("/cadastro")
     public ResponseEntity<Object> cadastroCliente(@RequestBody Cliente cliente) {
 
@@ -57,33 +57,45 @@ public class Parking82Controller {
 
         } else {
 
-            var vagas = servicesVagas.findById(cliente.getVaga());
-            vagas.setVagas(cliente.getVaga());
-            vagas.setStatus(true);
-            servicesVagas.save(vagas);
-            servicesCliente.save(cliente);
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
+            cliente.setEntrada(LocalTime.now().format(formatter));
 
-            return ResponseEntity.status(HttpStatus.CREATED).body("Cliente " + cliente.getNome() + " registrado na vaga " + vagas.getVagas());
+            servicesVagas.registrar(cliente);
+
+            return ResponseEntity.status(HttpStatus.CREATED).body("Cliente " + cliente.getNome() + " registrado na vaga " + cliente.getVaga());
         }
     }
 
-    //MÉTODO PARA FECHAR, EXCLUINDO O CLIENTE E DEIXANDO A VAGA LIVRE (TRUE)
-    @DeleteMapping("/fechar/{id}")
-    public ResponseEntity<Object> excluirCliente(@PathVariable Long id) {
+    @DeleteMapping("/finalizar/{placa}")
+    public ResponseEntity<Object> excluirCliente(@PathVariable String placa) {
 
-        Cliente cliente = servicesCliente.findById(id);
-        Vagas vagas = servicesVagas.findById(cliente.getVaga());
+        Cliente cliente = servicesCliente.findByPlaca(placa);
 
-        if(cliente.equals(null)) {
+        if(cliente == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Cliente não encontrado");
 
         } else {
 
-            servicesCliente.deleteById(id);
-            vagas.setStatus(false);
-            servicesVagas.save(vagas);
+            servicesVagas.recibo(cliente);
+            LocalDate date = LocalDate.now();
+            DateTimeFormatter formataData = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
-            return ResponseEntity.status(HttpStatus.OK).body("Fechamento concluído");
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
+            cliente.setSaida(LocalTime.now().format(formatter));
+
+            servicesCliente.valorTotal(cliente);
+
+            return ResponseEntity.status(HttpStatus.OK).body("\t\t\t\t\t\t\t\t\t--------- RECIBO (PARKING 82) ---------\n\n" +
+                    "\t\t\t\t\t\t\t\t\t\t\t\tDATA: " + LocalDate.now().format(formataData) +
+                    "\n\n\t\t\t\t\tCLIENTE: " + cliente.getNome() +
+                    "\t\t\t\t\t\tVEÍCULO: " + cliente.getVeiculo() +
+                    "\n\t\t\t\t\tPLACA: " + cliente.getPlaca() +
+                    "\t\t\t\t\t\t\t\t\tVAGA: " + cliente.getVaga() +
+                    "\n\t\t\t\t\tENTRADA: " + cliente.getEntrada() +
+                    "\t\t\t\t\t\t\t\t\tSAÍDA: " + cliente.getSaida() +
+                    "\n\n\t\t\t\t\t\t\t\t\t\t\t\tTOTAL: R$ "+ cliente.getValor() +
+                    "\n\n\t\t\t\tCNPJ: 99.107.370/0001-90 - Contato (82) 98162-1126 - E-mail parking82@contato.com" +
+                    "\n\t\t\t\t\t\t\t\tPaking 82 - Soluções em estacionamentos ©");
         }
 
     }

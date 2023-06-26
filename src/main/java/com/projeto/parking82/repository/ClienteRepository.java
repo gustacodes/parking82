@@ -10,5 +10,6 @@ public interface ClienteRepository extends JpaRepository<Cliente, Long> {
     
    boolean existsByVaga(Long vaga);
    boolean existsByPlaca(String placa);
+   Cliente findByPlaca(String placa);
    
 }
